@@ -1,0 +1,10 @@
+<h1>Create Stop Event</h1>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Submit</button>
+</form>
+
+<p><a href="/events/">View recent events</a></p>
+<p><a href="/admin/">Admin</a></p>

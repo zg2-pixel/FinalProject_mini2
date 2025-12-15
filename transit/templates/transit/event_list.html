@@ -1,0 +1,24 @@
+<h1>Recent Stop Events</h1>
+
+<table border="1" cellpadding="6">
+  <tr>
+    <th>Route</th>
+    <th>Trip</th>
+    <th>Stop</th>
+    <th>Arrival</th>
+    <th>Delay (sec)</th>
+  </tr>
+
+  {% for e in events %}
+  <tr>
+    <td>{{ e.trip.route.route_id }}</td>
+    <td>{{ e.trip.id }}</td>
+    <td>{{ e.stop.stop_id }}</td>
+    <td>{{ e.arrival_time }}</td>
+    <td>{{ e.delay_seconds }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<p><a href="/events/new/">Add another event</a></p>
+<p><a href="/admin/">Admin</a></p>
