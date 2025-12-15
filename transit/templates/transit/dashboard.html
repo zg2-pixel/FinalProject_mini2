@@ -1,0 +1,25 @@
+<h1>Dashboard</h1>
+<p>Average delay by stop (seconds)</p>
+
+<canvas id="delayChart" width="900" height="400"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const labels = JSON.parse('{{ labels_json|escapejs }}');
+  const values = JSON.parse('{{ values_json|escapejs }}');
+
+  new Chart(document.getElementById("delayChart"), {
+    type: "bar",
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Avg delay (sec)",
+        data: values
+      }]
+    }
+  });
+</script>
+
+<p><a href="/events/">Recent events</a></p>
+<p><a href="/events/new/">Add event</a></p>
+<p><a href="/admin/">Admin</a></p>
