@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Bus Stop Delay Map</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    #map {
+      height: 600px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Bus Stop Delay Map</h1>
+<p>Color indicates average delay (seconds)</p>
+
+<form method="get">
+  <label>Route:</label>
+  <select name="route" onchange="this.form.submit()">
+    <option value="">All</option>
+    {% for r in routes %}
+      <option value="{{ r }}" {% if r == selected_route %}selected{% endif %}>{{ r }}</option>
+    {% endfor %}
+  </select>
+</form>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  const stops = JSON.parse('{{ stops_json|escapejs }}');
+  const map = L.map('map').setView([40.4433, -79.9436], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  function getColor(delay) {
+    if (delay > 120) return 'red';
+    if (delay > 60) return 'orange';
+    return 'green';
+  }
+
+  stops.forEach(s => {
+    L.circleMarker([s.lat, s.lon], {
+      radius: 8,
+      color: getColor(s.avg_delay),
+      fillOpacity: 0.7
+    })
+    .addTo(map)
+    .bindPopup(
+      `<b>${s.id}</b><br/>
+       ${s.name}<br/>
+       Avg delay: ${s.avg_delay.toFixed(1)} sec`
+    );
+  });
+</script>
+
+<p>
+  <a href="{% url 'dashboard' %}{% if selected_route %}?route={{ selected_route }}{% endif %}">Chart Dashboard</a> |
+  <a href="{% url 'stop_map' %}{% if selected_route %}?route={{ selected_route }}{% endif %}">Map</a> |
+  <a href="{% url 'event_list' %}">Events</a> |
+  <a href="{% url 'create_stop_event' %}">Add event</a> |
+  <a href="/admin/">Admin</a>
+</p>
+
+
+</body>
+</html>

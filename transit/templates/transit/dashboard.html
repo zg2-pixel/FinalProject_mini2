@@ -1,6 +1,16 @@
 <h1>Dashboard</h1>
 <p>Average delay by stop (seconds)</p>
 
+<form method="get">
+  <label>Route:</label>
+  <select name="route" onchange="this.form.submit()">
+    <option value="">All</option>
+    {% for r in routes %}
+      <option value="{{ r }}" {% if r == selected_route %}selected{% endif %}>{{ r }}</option>
+    {% endfor %}
+  </select>
+</form>
+
 <canvas id="delayChart" width="900" height="400"></canvas>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -20,6 +30,10 @@
   });
 </script>
 
-<p><a href="/events/">Recent events</a></p>
-<p><a href="/events/new/">Add event</a></p>
-<p><a href="/admin/">Admin</a></p>
+<p>
+  <a href="{% url 'dashboard' %}{% if selected_route %}?route={{ selected_route }}{% endif %}">Chart Dashboard</a> |
+  <a href="{% url 'stop_map' %}{% if selected_route %}?route={{ selected_route }}{% endif %}">Map</a> |
+  <a href="{% url 'event_list' %}">Events</a> |
+  <a href="{% url 'create_stop_event' %}">Add event</a> |
+  <a href="/admin/">Admin</a>
+</p>
