@@ -35,5 +35,6 @@
   <a href="{% url 'stop_map' %}{% if selected_route %}?route={{ selected_route }}{% endif %}">Map</a> |
   <a href="{% url 'event_list' %}">Events</a> |
   <a href="{% url 'create_stop_event' %}">Add event</a> |
-  <a href="/admin/">Admin</a>
+  <a href="/admin/">Admin</a> |
+  <a href="{% url 'export_xlsx' %}{% if selected_route %}?route={{ selected_route }}{% endif %}">Export XLSX</a> |
 </p>

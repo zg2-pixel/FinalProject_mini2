@@ -7,4 +7,5 @@ urlpatterns = [
     path("events/", views.event_list, name="event_list"),
     path("dashboard/", views.dashboard, name="dashboard"),
     path("map/", views.stop_map, name="stop_map"),
+    path("export/xlsx/", views.export_stop_events_xlsx, name="export_xlsx"),
 ]

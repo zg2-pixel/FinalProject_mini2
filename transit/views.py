@@ -3,6 +3,8 @@ from django.db.models import Avg
 from django.shortcuts import render, redirect
 from .models import StopEvent
 from .forms import StopEventForm
+from django.http import HttpResponse
+from openpyxl import Workbook
 
 
 def home(request):
@@ -102,3 +104,50 @@ def stop_map(request):
             "selected_route": route_code or "",
         },
     )
+
+def export_stop_events_xlsx(request):
+    qs = StopEvent.objects.select_related("trip", "trip__route", "stop").order_by("-arrival_time")
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "StopEvents"
+
+    ws.append([
+        "route_id",
+        "route_name",
+        "trip_id",
+        "service_date",
+        "stop_id",
+        "stop_name",
+        "stop_lat",
+        "stop_lon",
+        "arrival_time",
+        "departure_time",
+        "delay_seconds",
+    ])
+
+    for e in qs:
+        trip = e.trip
+        route = trip.route
+        stop = e.stop
+
+        ws.append([
+            route.route_id,
+            route.name,
+            trip.id,
+            trip.service_date.isoformat(),
+            stop.stop_id,
+            stop.name,
+            float(stop.lat),
+            float(stop.lon),
+            e.arrival_time.isoformat(),
+            e.departure_time.isoformat() if e.departure_time else "",
+            int(e.delay_seconds),
+        ])
+
+    resp = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    resp["Content-Disposition"] = 'attachment; filename="stop_events.xlsx"'
+    wb.save(resp)
+    return resp
