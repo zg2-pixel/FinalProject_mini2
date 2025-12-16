@@ -71,7 +71,7 @@ The following ERD illustrates the database schema and relationships between the 
 - A **BusStop** can appear in multiple **StopEvents**
 - Each **StopEvent** links a **Trip** and a **BusStop**, recording timing and delay information
 
-![ERD](docs/ERD.png)
+![ERD](docs/ERD.drawio.png)
 
 ---
 
